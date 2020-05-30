@@ -1,11 +1,12 @@
-version: '3'
+version: '3.8'
 
 services: 
   adguardhome:
     image: adguard/adguardhome:armhf-latest
     container_name: adguardhome
-    restart: always
-    network_mode: host
+    placement:
+      constraints:
+        - "node.role==manager"
     volumes:
       - adguard-work:/opt/adguardhome/work
       - adguard-conf:/opt/adguardhome/conf 
