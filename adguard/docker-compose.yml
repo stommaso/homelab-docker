@@ -4,9 +4,15 @@ services:
   adguardhome:
     image: adguard/adguardhome:armhf-latest
     container_name: adguardhome
-    placement:
-      constraints:
-        - "node.role==manager"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints:
+          - "node.role==manager"
     volumes:
       - adguard-work:/opt/adguardhome/work
       - adguard-conf:/opt/adguardhome/conf 
