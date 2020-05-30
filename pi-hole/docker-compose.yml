@@ -27,7 +27,7 @@ services:
     environment:
       TZ: 'Europe/Amsterdam'
       IPv6: 'False'
-      WEBPASSWORD: /run/secrets/password
+      WEBPASSWORD_FILE: '/run/secrets/password'
     
     dns:
       - 127.0.0.1
