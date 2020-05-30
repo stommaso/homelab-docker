@@ -4,11 +4,15 @@ services:
   portainer:
     image: portainer/portainer:latest
     container_name: portainer
-    restart_policy:
-      condition: on-failure
-      delay: 5s
-      max_attempts: 3
-      window: 120s
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints:
+          - "node.role==manager"
     network_mode: portainer_agent_network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -19,14 +23,14 @@ services:
   portainer_agent:
     image: portainer/agent:latest
     container_name: portainer
-    restart_policy:
-      condition: on-failure
-      delay: 5s
-      max_attempts: 3
-      window: 120s
     network_mode: portainer_agent_network
     deploy:
       mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-agent-volumes:/var/lib/docker/volumes
