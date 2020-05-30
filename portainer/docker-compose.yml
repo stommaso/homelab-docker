@@ -1,0 +1,36 @@
+version: '3'
+
+services: 
+  portainer:
+    image: portainer/portainer:latest
+    container_name: portainer
+    restart: unless-stopped
+    network_mode: portainer_agent_network
+    volumes:
+      - portainer-run:/var/run/docker.sock
+      - portainer-data:/data
+    ports:
+      - 9000:9000
+      - 8000:8000
+  portainer_agent:
+    image: portainer/agent:latest
+    container_name: portainer
+    restart: unless-stopped
+    network_mode: portainer_agent_network
+    mode: global
+    volumes:
+      - portainer-agent-run:/var/run/docker.sock
+      - portainer-agent-volumes:/var/lib/docker/volumes
+    ports:
+      - 9000:9000
+      - 8000:8000
+
+volumes:
+  portainer-run:
+    driver: local
+  portainer-data:
+    driver: local
+  portainer-agent-run:
+    driver: local
+  portainer-agent-volumes:
+    driver: local     
