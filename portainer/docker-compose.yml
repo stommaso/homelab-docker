@@ -22,9 +22,6 @@ services:
     volumes:
       - portainer-agent-run:/var/run/docker.sock
       - portainer-agent-volumes:/var/lib/docker/volumes
-    ports:
-      - 9000:9000
-      - 8000:8000
 
 volumes:
   portainer-run:
