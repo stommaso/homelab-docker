@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    volumes:
+      - etc:/etc/pihole/
+      - etc-dnsmasq.d:/etc/dnsmasq.d/
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    environment:
+      TZ: 'Europe/Amsterdam'
+      WEBPASSWORD: 'admin'
+    
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+
+volumes:
+  etc:
+    driver: local
+  etc-dnsmasq.d:
+    driver: local
+    
