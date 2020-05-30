@@ -17,7 +17,8 @@ services:
     container_name: portainer
     restart: unless-stopped
     network_mode: portainer_agent_network
-    mode: global
+    deploy:
+      mode: global
     volumes:
       - portainer-agent-run:/var/run/docker.sock
       - portainer-agent-volumes:/var/lib/docker/volumes
@@ -33,4 +34,4 @@ volumes:
   portainer-agent-run:
     driver: local
   portainer-agent-volumes:
-    driver: local     
+    driver: local
