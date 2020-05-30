@@ -10,6 +10,9 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+      placement:
+        constraints:
+          - "node.role==manager"
     volumes:
       - etc:/etc/pihole/
       - etc-dnsmasq.d:/etc/dnsmasq.d/
@@ -21,7 +24,7 @@ services:
       - "443:443/tcp"
     environment:
       TZ: 'Europe/Amsterdam'
-      WEBPASSWORD: 'admin'
+      WEBPASSWORD: secrets
     
     dns:
       - 127.0.0.1
@@ -33,3 +36,7 @@ volumes:
   etc-dnsmasq.d:
     driver: local
     
+secrets:
+  password:
+    external: true
+    name: pi-hole-password
