@@ -1,7 +1,7 @@
 version: '3'
 
 services: 
-  portainer:
+  adguardhome:
     image: adguard/adguardhome:armhf-latest
     container_name: adguardhome
     restart: always
@@ -10,7 +10,7 @@ services:
       - adguard-work:/opt/adguardhome/work
       - adguard-conf:/opt/adguardhome/conf 
     ports:
-      - "53:53"
+      - "53:53/udp"
       - "80:80"
       - "443:443"
       - "853:853"

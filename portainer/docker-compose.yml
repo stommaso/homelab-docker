@@ -22,6 +22,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-agent-volumes:/var/lib/docker/volumes
+    ports: 
+      - "9001:9001"
 
 volumes:
   portainer-data:
