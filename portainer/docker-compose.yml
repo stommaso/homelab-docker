@@ -10,8 +10,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-data:/data
     ports:
-      - 9000:9000
-      - 8000:8000
+      - "9000:9000"
+      - "8000:8000"
   portainer_agent:
     image: portainer/agent:latest
     container_name: portainer
