@@ -22,9 +22,12 @@ services:
       - "67:67/udp"
       - "80:80/tcp"
       - "443:443/tcp"
+    secrets:
+      - password
     environment:
       TZ: 'Europe/Amsterdam'
-      WEBPASSWORD: secrets
+      IPv6: 'False'
+      WEBPASSWORD: /run/secrets/password
     
     dns:
       - 127.0.0.1
