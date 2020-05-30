@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     network_mode: portainer_agent_network
     volumes:
-      - portainer-run:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
       - portainer-data:/data
     ports:
       - 9000:9000
@@ -20,15 +20,11 @@ services:
     deploy:
       mode: global
     volumes:
-      - portainer-agent-run:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
       - portainer-agent-volumes:/var/lib/docker/volumes
 
 volumes:
-  portainer-run:
-    driver: local
   portainer-data:
-    driver: local
-  portainer-agent-run:
     driver: local
   portainer-agent-volumes:
     driver: local
