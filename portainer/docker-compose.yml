@@ -13,7 +13,8 @@ services:
       placement:
         constraints:
           - "node.role==manager"
-    network: portainer_agent_network
+      networks:
+        - overlay
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-data:/data
@@ -30,7 +31,8 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-    network: portainer_agent_network
+    networks:
+      - overlay
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-agent-volumes:/var/lib/docker/volumes
@@ -42,3 +44,6 @@ volumes:
     driver: local
   portainer-agent-volumes:
     driver: local
+
+networks:
+  overlay:
