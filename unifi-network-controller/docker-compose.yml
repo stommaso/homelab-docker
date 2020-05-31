@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   unifi:
-    image: ryansch/unifi-rpi:latest
+    image: jacobalberty/unifi:latest
     container_name: unifi
     deploy:
       restart_policy:
@@ -10,17 +10,9 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-    # Uncomment the following to set java options
-    # environment:
-    #   JAVA_OPTS: -Xmx512M
     volumes:
-      # Unifi v5.0.7 creates all of these directories (some remain empty)
-      - config:/var/lib/unifi
-      - log:/usr/lib/unifi/logs
-      - log2:/var/log/unifi
-      - run:/usr/lib/unifi/run
-      - run2:/run/unifi
-      - work:/usr/lib/unifi/work
+      - unifi:/unifi
+      - run:/var/run/unifi
     ports:
       - "3478:3478/udp"
       - "5514:5514"
@@ -33,17 +25,19 @@ services:
       - "5656-5699:5656-5699/udp"
       - "10001:10001/udp"
       - "1900:1900/udp"
+    environment:
+      RUNAS_UID0: 'false'
+      UNIFI_HTTP_PORT: '8080'
+      UNIFI_HTTPS_PORT: '8443'
+      UNIFI_UID: '1000'
+      UNIFI_GID": '1000'
+      TZ: 'Europe/Amsterdam'
+
 
 volumes:
-  config:
-    driver: local
-  log:
-    driver: local
-  log2:
+  unifi:
     driver: local
   run:
     driver: local
-  run2:
-    driver: local
-  work:
+  cert:
     driver: local
