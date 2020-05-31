@@ -22,22 +22,13 @@ services:
         published: 6789
         protocol: tcp
         mode: host
-      - target: 8080 # Device/ controller comm.
+      - target: 8080 # Device / controller comm.
         published: 8080
         protocol: tcp
         mode: host
-      - target: 8443 # Controller GUI/API as seen in a web browser
-        published: 8443
-        protocol: tcp
-        mode: host
-      - target: 8880 # HTTP portal redirection
-        published: 8880
-        protocol: tcp
-        mode: host
-      - target: 8843 # HTTPS portal redirection
-        published: 8843
-        protocol: tcp
-        mode: host
+      - "8443:8443/tcp" # Controller GUI/API as seen in a web browser
+      - "8880:8880/tcp" # HTTP portal redirection
+      - "8843:8843/tcp" # HTTPS portal redirection
       - target: 10001 # AP discovery
         published: 10001
         protocol: udp
