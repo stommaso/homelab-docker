@@ -1,26 +1,6 @@
 version: '3.8'
 
-services: 
-  portainer:
-    image: portainer/portainer:latest
-    container_name: portainer
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-      placement:
-        constraints:
-          - "node.role==manager"
-    networks:
-      - agent_network
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - data:/data
-    ports:
-      - "9000:9000"
-      - "8000:8000"
+services:
   portainer_agent:
     image: portainer/agent:latest
     container_name: portainer_agent
@@ -43,6 +23,26 @@ services:
         mode: host
     environment:
       AGENT_CLUSTER_ADDR: portainer_agent
+  portainer:
+    image: portainer/portainer:latest
+    container_name: portainer
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints:
+          - "node.role==manager"
+    networks:
+      - agent_network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - data:/data
+    ports:
+      - "9000:9000"
+      - "8000:8000"
 
 volumes:
   data:
