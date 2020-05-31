@@ -10,23 +10,32 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+      placement:
+        constraints:
+          - "node.labels.unifi==true"
     volumes:
       - config:/config
     ports:
-      - target: 3478 # STUN
+      - target: 3478 # Port used for STUN.
         published: 3478
         protocol: udp
         mode: host
-      - target: 10001 # AP discovery
+      - target: 10001 # Port used for device discovery
         published: 10001
         protocol: udp
         mode: host
-      - "8080:8080" # Controller GUI/API as seen in a web browse
-      - "8081:8081"
-      - "8443:8443"
-      - "8843:8843" # HTTPS portal redirection
-      - "8880:8880" # HTTP portal redirection
-      - "6789:6789" # For throughput test
+      - target: 1900 # Port used for "Make controller discoverable on L2 network" in controller settings.
+        published: 1900
+        protocol: udp
+        mode: host
+      - target: 8080 # Port used for device and controller communication.
+        published: 8080
+        protocol: tcp
+        mode: host
+      - "8443:8443" # Port used for controller GUI/API as seen in a web browser
+      - "8843:8843" # Port used for HTTPS portal redirection.
+      - "8880:8880" # Port used for HTTP portal redirection.
+      - "6789:6789" # Port used for UniFi mobile speed test.
     environment:
       - PUID=1000
       - PGID=1000
