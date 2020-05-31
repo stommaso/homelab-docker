@@ -13,18 +13,22 @@ services:
       volumes:
         - config:/config
       ports:
-        - "443:443"
+        - "6080:80"
+        - "6443:443"
       secrets:
         - password
+        - email
       environment:
         PUID: '1000'
         PGID: '1000'
         TZ: 'Europe/Amsterdam'
         URL: 'simo.fyi'
-        SUBDOMAINS: 'www, *.home.ams'
+        SUBDOMAINS: 'unifi.home.ams'
         VALIDATION: 'http'
-        ONLY_SUBDOMAINS: 'false'
+        EMAIL: '/run/secrets/email'
+        ONLY_SUBDOMAINS: 'true'
         FILE__PASSWORD: '/run/secrets/password'
+        STAGING: 'false'
 
 volumes:
   config:
@@ -34,6 +38,9 @@ secrets:
   password:
     external: true
     name: letsencrypt-password
+  email:
+    external: true
+    name: email
 
 
 
