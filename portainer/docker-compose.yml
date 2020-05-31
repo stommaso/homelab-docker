@@ -14,7 +14,7 @@ services:
         constraints:
           - "node.role==manager"
     networks:
-      - overlay
+      - agent_network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - data:/data
@@ -32,12 +32,15 @@ services:
         max_attempts: 3
         window: 120s
     networks:
-      - overlay
+      - agent_network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - agent-volumes:/var/lib/docker/volumes
     ports: 
       - "9001:9001"
+    environment:
+      AGENT_CLUSTER_ADDR: task.agent
+      AGENT_PORT: 9001
 
 volumes:
   data:
@@ -46,4 +49,6 @@ volumes:
     driver: local
 
 networks:
-  overlay:
+  agent_network:
+    driver: overlay
+    attachable: true
