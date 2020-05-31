@@ -14,17 +14,34 @@ services:
       - unifi:/unifi
       - run:/var/run/unifi
     ports:
-      - "3478:3478/udp"
-      - "5514:5514"
-      - "8080:8080"
-      - "8443:8443" 
-      - "8843:8843" 
-      - "8880:8880"
-      - "6789:6789"
-      - "27117:27117"
-      - "5656-5699:5656-5699/udp"
-      - "10001:10001/udp"
-      - "1900:1900/udp"
+      - target: '3478' # STUN
+        published: '3478'
+        protocol: udp
+        mode: host
+      - target: '6789' # Speed test
+        published: '6789'
+        protocol: tcp
+        mode: host
+      - target: '8080' # Device/ controller comm.
+        published: '8080'
+        protocol: tcp
+        mode: host
+      - target: '8443' # Controller GUI/API as seen in a web browser
+        published: '8443'
+        protocol: tcp
+        mode: host
+      - target: '8880' # HTTP portal redirection
+        published: '8880'
+        protocol: tcp
+        mode: host
+      - target: '8843' # HTTPS portal redirection
+        published: '8843'
+        protocol: tcp
+        mode: host
+      - target: '10001' # AP discovery
+        published: '10001'
+        protocol: udp
+        mode: host
     environment:
       RUNAS_UID0: 'false'
       UNIFI_HTTP_PORT: '8080'
