@@ -17,13 +17,13 @@ services:
       secrets:
         - password
       environment:
-        PUID: 1000
-        PGID: 1000
+        PUID: '1000'
+        PGID: '1000'
         TZ: 'Europe/Amsterdam'
-        URL: simo.fyi
-        SUBDOMAINS: www, *.home.ams
-        VALIDATION: http
-        ONLY_SUBDOMAINS: false
+        URL: 'simo.fyi'
+        SUBDOMAINS: 'www, *.home.ams'
+        VALIDATION: 'http'
+        ONLY_SUBDOMAINS: 'false'
         FILE__PASSWORD: '/run/secrets/password'
 
 volumes:
