@@ -39,5 +39,3 @@ volumes:
     driver: local
   run:
     driver: local
-  cert:
-    driver: local
