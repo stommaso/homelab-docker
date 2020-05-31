@@ -32,10 +32,22 @@ services:
         published: 8080
         protocol: tcp
         mode: host
-      - "8443:8443" # Port used for controller GUI/API as seen in a web browser
-      - "8843:8843" # Port used for HTTPS portal redirection.
-      - "8880:8880" # Port used for HTTP portal redirection.
-      - "6789:6789" # Port used for UniFi mobile speed test.
+      - target: 8443 # Port used for controller GUI/API as seen in a web browser
+        published: 8443
+        protocol: tcp
+        mode: host
+      - target: 8843 # Port used for HTTPS portal redirection.
+        published: 8843
+        protocol: tcp
+        mode: host
+      - target: 8880 # Port used for HTTP portal redirection.
+        published: 8880
+        protocol: tcp
+        mode: host
+      - target: 6789 # Port used for UniFi mobile speed test.
+        published: 6789
+        protocol: tcp
+        mode: host
     environment:
       - PUID=1000
       - PGID=1000
