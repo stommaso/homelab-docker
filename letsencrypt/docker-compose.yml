@@ -1,34 +1,40 @@
 version: "3.8"
 
 services:
-    letsencrypt:
-      container_name: letsencrypt
-      image: linuxserver/letsencrypt:arm32v7-latest
-      deploy:
-        restart_policy:
-          condition: on-failure
-          delay: 5s
-          max_attempts: 3
-          window: 120s
-      volumes:
-        - config:/config
-      ports:
-        - "6080:80"
-        - "6443:443"
-      secrets:
-        - password
-        - email
-      environment:
-        PUID: '1000'
-        PGID: '1000'
-        TZ: 'Europe/Amsterdam'
-        URL: 'simo.fyi'
-        SUBDOMAINS: 'unifi.home.ams'
-        VALIDATION: 'http'
-        EMAIL: '/run/secrets/email'
-        ONLY_SUBDOMAINS: 'true'
-        FILE__PASSWORD: '/run/secrets/password'
-        STAGING: 'false'
+  certbot:
+    container_name: certbot
+    image: certbot/certbot:arm32v6-latest
+  letsencrypt:
+    container_name: letsencrypt
+    image: linuxserver/letsencrypt:arm32v7-latest
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    volumes:
+      - config:/config
+      - /run/secrets/aws-creds-ini:/config/dns-conf
+    ports:
+      - "6080:80"
+      - "6443:443"
+    secrets:
+      - password
+      - email
+      - aws-creds-ini
+    environment:
+      PUID: '1000'
+      PGID: '1000'
+      TZ: 'Europe/Amsterdam'
+      URL: 'simo.fyi'
+      SUBDOMAINS: 'wildcard'
+      VALIDATION: 'dns'
+      DNSPLUGIN: 'route53'
+      EMAIL: '/run/secrets/email'
+      ONLY_SUBDOMAINS: 'true'
+      FILE__PASSWORD: '/run/secrets/password'
+      STAGING: 'false'
 
 volumes:
   config:
@@ -41,6 +47,9 @@ secrets:
   email:
     external: true
     name: email
+  aws-creds-ini:
+    external: true
+    name: aws-creds-ini
 
 
 
