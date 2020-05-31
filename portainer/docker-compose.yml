@@ -19,11 +19,14 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - data:/data
     ports:
-      - "9000:9000"
+      - target: 9000
+        published: 9000
+        protocol: tcp
+        mode: host
       - "8000:8000"
   portainer_agent:
     image: portainer/agent:latest
-    container_name: portainer
+    container_name: portainer_agent
     deploy:
       mode: global
       restart_policy:
@@ -36,11 +39,13 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - agent-volumes:/var/lib/docker/volumes
-    ports: 
-      - "9001:9001"
+    ports:
+      - target: 9001
+        published: 9001
+        protocol: tcp
+        mode: host
     environment:
-      AGENT_CLUSTER_ADDR: task.agent
-      AGENT_PORT: 9001
+      AGENT_CLUSTER_ADDR: portainer_agent
 
 volumes:
   data:
