@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   unifi:
-    image: jacobalberty/unifi:latest
+    image: linuxserver/unifi-controller:arm32v7-latest
     container_name: unifi
     deploy:
       restart_policy:
@@ -11,39 +11,27 @@ services:
         max_attempts: 3
         window: 120s
     volumes:
-      - unifi:/unifi
-      - run:/var/run/unifi
+      - config:/config
     ports:
       - target: 3478 # STUN
         published: 3478
         protocol: udp
         mode: host
-      - target: 6789 # Speed test
-        published: 6789
-        protocol: tcp
-        mode: host
-      - target: 8080 # Device / controller comm.
-        published: 8080
-        protocol: tcp
-        mode: host
-      - "8443:8443/tcp" # Controller GUI/API as seen in a web browser
-      - "8880:8880/tcp" # HTTP portal redirection
-      - "8843:8843/tcp" # HTTPS portal redirection
       - target: 10001 # AP discovery
         published: 10001
         protocol: udp
         mode: host
+      - "8080:8080" # Controller GUI/API as seen in a web browse
+      - "8081:8081"
+      - "8443:8443"
+      - "8843:8843" # HTTPS portal redirection
+      - "8880:8880" # HTTP portal redirection
+      - "6789:6789" # For throughput test
     environment:
-      RUNAS_UID0: 'false'
-      UNIFI_HTTP_PORT: '8080'
-      UNIFI_HTTPS_PORT: '8443'
-      UNIFI_UID: '1000'
-      UNIFI_GID": '1000'
-      TZ: 'Europe/Amsterdam'
-
+      - PUID=1000
+      - PGID=1000
+      - MEM_LIMIT=1024M #optional
 
 volumes:
-  unifi:
-    driver: local
-  run:
+  config:
     driver: local
