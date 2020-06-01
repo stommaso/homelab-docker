@@ -17,7 +17,7 @@ services:
       - etc:/etc/pihole/
       - etc-dnsmasq.d:/etc/dnsmasq.d/
     ports:
-      - "53/53"
+      - "53:53"
       - "53:53/udp"
       - "67:67/udp"
       - "7080:80/tcp"
