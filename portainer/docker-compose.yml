@@ -3,60 +3,34 @@ version: '3.8'
 services:
   agent:
     image: portainer/agent:latest
-    container_name: portainer_agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+      - agent_network
     deploy:
       mode: global
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-    networks:
-      - agent_network
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - agent-volumes:/var/lib/docker/volumes
-    ports:
-      - target: 9001
-        published: 9001
-        protocol: tcp
-        mode: host
-    environment:
-      AGENT_CLUSTER_ADDR: task.agent
+      placement:
+        constraints: [node.platform.os == linux]
+
   portainer:
     image: portainer/portainer:latest
-    container_name: portainer
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-      placement:
-        constraints:
-          - "node.role==manager"
-    networks:
-      - agent_network
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - type: volume
-        source: data
-        target: /data/
-        volume:
-          nocopy: true
+    command: -H tcp://tasks.agent:9001 --tlsskipverify
     ports:
       - "9000:9000"
       - "8000:8000"
+    volumes:
+      - portainer_data:/data
+    networks:
+      - agent_network
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
 
 volumes:
-  data:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: nfsvers=4,addr=192.168.1.150,rw
-      device: ":/opt/nfs/volumes/portainer_data"
-  agent-volumes:
-    driver: local
+  portainer_data:
 
 networks:
   agent_network:
