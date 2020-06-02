@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  portainer_agent:
+  agent:
     image: portainer/agent:latest
     container_name: portainer_agent
     deploy:
@@ -22,7 +22,7 @@ services:
         protocol: tcp
         mode: host
     environment:
-      AGENT_CLUSTER_ADDR: portainer_agent
+      AGENT_CLUSTER_ADDR: task.agent
   portainer:
     image: portainer/portainer:latest
     container_name: portainer
@@ -39,7 +39,11 @@ services:
       - agent_network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - data:/data
+      - type: volume
+        source: data
+        target: /data/
+        volume:
+          nocopy: true
     ports:
       - "9000:9000"
       - "8000:8000"
@@ -47,6 +51,10 @@ services:
 volumes:
   data:
     driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.1.150,rw
+      device: ":/opt/nfs/volumes/portainer_data"
   agent-volumes:
     driver: local
 
