@@ -34,7 +34,7 @@ services:
       IPv6: 'False'
       WEBPASSWORD_FILE: '/run/secrets/password'
       DNS1: '127.0.0.1'
-      DNS1: '1.1.1.1'
+      DNS2: '1.1.1.1'
 
 volumes:
   etc:
