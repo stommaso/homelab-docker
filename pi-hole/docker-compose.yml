@@ -27,19 +27,19 @@ services:
       WEBPASSWORD_FILE: '/run/secrets/password'
     dns:
       - 127.0.0.1
-      - 1.1.1.1
+      - 192.168.1.1
 
 volumes:
   etc:
     driver_opts:
       type: "nfs"
       o: "addr=192.168.1.150,nolock,soft,rw"
-      device: ":/opt/nfs/"
+      device: ":/opt/nfs/pi-hole-stack_etc"
   etc-dnsmasq.d:
     driver_opts:
       type: "nfs"
       o: "addr=192.168.1.150,nolock,soft,rw"
-      device: ":/opt/nfs/"
+      device: ":/opt/nfs/pi-hole-stack_etc-dnsmasq.d"
     
 secrets:
   password:
