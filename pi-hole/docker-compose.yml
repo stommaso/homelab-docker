@@ -18,7 +18,7 @@ services:
           nocopy: true
       - type: volume
         source: etc-dnsmasq.d
-        target: /etc/dnsmasq.d/
+        target: /tc/dnsmasq.d/
         volume:
           nocopy: true
     ports:
@@ -33,23 +33,24 @@ services:
       TZ: 'Europe/Amsterdam'
       IPv6: 'False'
       WEBPASSWORD_FILE: '/run/secrets/password'
-      DNS1: '8.8.8.8'
-      DNS2: '8.8.4.4'
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
 
 volumes:
   etc:
     driver: local
     driver_opts:
-      type: "nfs"
-      o: addr=192.168.1.150,nolock,soft,rw
-      device: ":/opt/nfs/volumes/pi-hole/etc"
+      type: nfs
+      o: nfsvers=4,addr=192.168.1.150,rw
+      device: ":/opt/nfs/volumes/pi-hole_etc"
   etc-dnsmasq.d:
     driver: local
     driver_opts:
-      type: "nfs"
-      o: addr=192.168.1.150,nolock,soft,rw
-      device: ":/opt/nfs/volumes/pi-hole/etc-dnsmasq.d"
-    
+      type: nfs
+      o: nfsvers=4,addr=192.168.1.150,rw
+      device: ":/opt/nfs/volumes/pi-hole_etc-dnsmasq.d"
+
 secrets:
   password:
     external: true
