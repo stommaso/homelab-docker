@@ -31,15 +31,16 @@ services:
 
 volumes:
   etc:
+    driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=192.168.1.150,nolock,soft,rw"
-      device: ":/opt/nfs/pi-hole-stack_etc"
+      o: addr=192.168.1.150,nolock,soft,rw
+      device: ":/opt/nfs/volumes/pi-hole/etc"
   etc-dnsmasq.d:
+    driver: local
+    driver: "nfs"
     driver_opts:
-      type: "nfs"
-      o: "addr=192.168.1.150,nolock,soft,rw"
-      device: ":/opt/nfs/pi-hole-stack_etc-dnsmasq.d"
+      device: ":/opt/nfs/volumes/pi-hole/etc-dnsmasq.d:"
     
 secrets:
   password:
