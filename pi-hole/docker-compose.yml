@@ -10,9 +10,6 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-      placement:
-        constraints:
-          - "node.labels.pihole==true"
     volumes:
       - etc:/etc/pihole/
       - etc-dnsmasq.d:/etc/dnsmasq.d/
@@ -34,9 +31,13 @@ services:
 
 volumes:
   etc:
-    driver: local
+    type: "nfs"
+      o: "addr=192.168.1.150,nolock,soft,rw"
+      device: ":/opt/nfs/"
   etc-dnsmasq.d:
-    driver: local
+      type: "nfs"
+      o: "addr=192.168.1.150,nolock,soft,rw"
+      device: ":/opt/nfs/"
     
 secrets:
   password:
