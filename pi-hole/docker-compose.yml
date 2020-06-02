@@ -33,9 +33,8 @@ services:
       TZ: 'Europe/Amsterdam'
       IPv6: 'False'
       WEBPASSWORD_FILE: '/run/secrets/password'
-    dns:
-      - 127.0.0.1
-      - 192.168.1.1
+      DNS1: '127.0.0.1'
+      DNS1: '1.1.1.1'
 
 volumes:
   etc:
@@ -49,7 +48,7 @@ volumes:
     driver_opts:
       type: "nfs"
       o: addr=192.168.1.150,nolock,soft,rw
-      device: ":/opt/nfs/volumes/pi-hole/etc-dnsmasq.d:"
+      device: ":/opt/nfs/volumes/pi-hole/etc-dnsmasq.d"
     
 secrets:
   password:
