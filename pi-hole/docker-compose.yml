@@ -38,8 +38,9 @@ volumes:
       device: ":/opt/nfs/volumes/pi-hole/etc"
   etc-dnsmasq.d:
     driver: local
-    driver: "nfs"
     driver_opts:
+      type: "nfs"
+      o: addr=192.168.1.150,nolock,soft,rw
       device: ":/opt/nfs/volumes/pi-hole/etc-dnsmasq.d:"
     
 secrets:
