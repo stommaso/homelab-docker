@@ -11,8 +11,16 @@ services:
         max_attempts: 3
         window: 120s
     volumes:
-      - etc:/etc/pihole/
-      - etc-dnsmasq.d:/etc/dnsmasq.d/
+      - type: volume
+        source: etc
+        target: /etc/pihole/
+        volume:
+          nocopy: true
+      - type: volume
+        source: etc-dnsmasq.d
+        target: /etc/dnsmasq.d/
+        volume:
+          nocopy: true
     ports:
       - "53:53"
       - "53:53/udp"
