@@ -33,8 +33,8 @@ services:
       TZ: 'Europe/Amsterdam'
       IPv6: 'False'
       WEBPASSWORD_FILE: '/run/secrets/password'
-      DNS1: '127.0.0.1'
-      DNS2: '1.1.1.1'
+      DNS1: '8.8.8.8'
+      DNS2: '8.8.4.4'
 
 volumes:
   etc:
