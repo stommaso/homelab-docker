@@ -17,12 +17,13 @@ services:
     environment:
       TZ: 'Europe/Amsterdam'
       WATCHTOWER_POLL_INTERVAL: '300'
+      WATCHTOWER_TIMEOUT: '30'
       WATCHTOWER_NOTIFICATIONS: 'slack'
       WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL: '/run/secrets/watchtower-hook'
       WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: 'watchtower-pi'
       WATCHTOWER_NOTIFICATION_SLACK_CHANNEL: '#watchtower'
       WATCHTOWER_NOTIFICATION_SLACK_ICON_EMOJI: ':whale:'
-      
+   
 secrets:
   watchtower-hook:
     external: true

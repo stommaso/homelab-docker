@@ -16,7 +16,11 @@ services:
       labels:
         com.centurylinklabs.watchtower.enable: "false"
     volumes:
-      - config:/config
+      - type: volume
+      source: config
+      target: /config
+      volume:
+        nocopy: true
     ports:
       - target: 3478 # Port used for STUN.
         published: 3478
@@ -58,3 +62,7 @@ services:
 volumes:
   config:
     driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.1.150,rw
+      device: ":/opt/nfs/volumes/unifi_config"
