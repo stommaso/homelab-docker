@@ -18,7 +18,7 @@ services:
           nocopy: true
       - type: volume
         source: etc-dnsmasq.d
-        target: /tc/dnsmasq.d/
+        target: /etc/dnsmasq.d/
         volume:
           nocopy: true
     ports:
