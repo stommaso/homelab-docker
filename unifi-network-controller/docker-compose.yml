@@ -12,10 +12,10 @@ services:
         window: 120s
     volumes:
       - type: volume
-      source: config
-      target: /config
-      volume:
-        nocopy: true
+        source: config
+        target: /config
+        volume:
+          nocopy: true
     ports:
       - target: 3478 # Port used for STUN.
         published: 3478
