@@ -3,7 +3,7 @@ version: "3.8"
 services:
   watchtower:
     container_name: watchtower
-    image: containrrr/watchtower:armhf-latest
+    image: containrrr/watchtower:latest
     deploy:
       restart_policy:
         condition: on-failure
