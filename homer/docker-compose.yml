@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+    homer:
+    container_name: homer
+    image: b4bz/homer:latest
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    volumes:
+      - type: volume
+        source: config
+        target: /www/config.yml
+        volume:
+          nocopy: true
+      - type: volume
+        source: assets
+        target: /www/assets
+        volume:
+          nocopy: true
+    ports:
+      - "12080:80"
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: 'Europe/Amsterdam'
+
+volumes:
+  config:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.1.150,rw
+      device: ":/opt/nfs/volumes/homer_config"
+      assets:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.1.150,rw
+      device: ":/opt/nfs/volumes/homer_assets"
