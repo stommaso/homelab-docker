@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-    organizr:
+  organizr:
     container_name: organizr
     image: linuxserver/organizr:arm32v7-latest
 
