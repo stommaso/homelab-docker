@@ -18,7 +18,7 @@ services:
         volume:
           nocopy: true
     ports:
-      - "9983/80"
+      - "9983:80"
     environment:
       PUID: 1000
       PGID: 1000
