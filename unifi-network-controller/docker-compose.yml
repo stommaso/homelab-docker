@@ -37,10 +37,7 @@ services:
         published: 8443
         protocol: tcp
         mode: host
-      - target: 8843 # Port used for HTTPS portal redirection.
-        published: 8843
-        protocol: tcp
-        mode: host
+      - "8843:8843" # Port used for HTTPS portal redirection.
       - target: 8880 # Port used for HTTP portal redirection.
         published: 8880
         protocol: tcp
