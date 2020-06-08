@@ -31,7 +31,7 @@ volumes:
       type: nfs
       o: nfsvers=4,addr=192.168.1.150,rw
       device: ":/opt/nfs/volumes/homer_config"
-      assets:
+  assets:
     driver: local
     driver_opts:
       type: nfs
