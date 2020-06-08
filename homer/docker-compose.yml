@@ -22,7 +22,7 @@ services:
           volume:
             nocopy: true
       ports:
-        - "12080:80"
+        - "12080:8080"
 
 volumes:
   config:
