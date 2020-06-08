@@ -12,7 +12,7 @@ services:
           window: 120s
       volumes:
         - type: volume
-          source: config.yml
+          source: config
           target: /www/config.yml
           volume:
             nocopy: true
@@ -30,7 +30,7 @@ volumes:
     driver_opts:
       type: nfs
       o: nfsvers=4,addr=192.168.1.150,rw
-      device: ":/opt/nfs/volumes/homer_config"
+      device: ":/opt/nfs/volumes/homer_config/config.yml"
   assets:
     driver: local
     driver_opts:
