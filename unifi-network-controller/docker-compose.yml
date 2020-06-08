@@ -18,6 +18,8 @@ services:
           nocopy: true
     ports:
       - "8443:8443" # Port used for HTTPS portal redirection.
+      - "8843:8843" # Port used for HTTPS portal redirection.
+      - "8880:8880" # Port used for HTTP portal redirection.
       - target: 3478 # Port used for STUN.
         published: 3478
         protocol: udp
@@ -32,14 +34,6 @@ services:
         mode: host
       - target: 8080 # Port used for device and controller communication.
         published: 8080
-        protocol: tcp
-        mode: host
-      - target: 8843 # Port used for HTTPS portal redirection.
-        published: 8843
-        protocol: tcp
-        mode: host
-      - target: 8880 # Port used for HTTP portal redirection.
-        published: 8880
         protocol: tcp
         mode: host
       - target: 6789 # Port used for UniFi mobile speed test.
