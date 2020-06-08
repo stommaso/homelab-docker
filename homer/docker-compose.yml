@@ -12,7 +12,7 @@ services:
           window: 120s
       volumes:
         - type: volume
-          source: config
+          source: config.yml
           target: /www/config.yml
           volume:
             nocopy: true
