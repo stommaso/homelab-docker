@@ -13,19 +13,12 @@ services:
       mode: global
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock 
-    secrets:
-      - watchtower-hook
     environment:
       TZ: 'Europe/Amsterdam'
       WATCHTOWER_POLL_INTERVAL: '300'
       WATCHTOWER_TIMEOUT: '30'
       WATCHTOWER_NOTIFICATIONS: 'slack'
-      WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL: /run/secrets/watchtower-hook
+      WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL: ${WATCHTOWER_SLACK_HOOK}
       WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: 'watchtower-pi'
       WATCHTOWER_NOTIFICATION_SLACK_CHANNEL: '#watchtower'
       WATCHTOWER_NOTIFICATION_SLACK_ICON_EMOJI: ':whale:'
-   
-secrets:
-  watchtower-hook:
-    external: true
-    name: watchtower-hook
