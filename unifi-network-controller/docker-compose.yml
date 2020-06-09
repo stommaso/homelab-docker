@@ -41,9 +41,9 @@ services:
         protocol: tcp
         mode: host
     environment:
-      - PUID: '1000'
-      - PGID: '1000'
-      - MEM_LIMIT: '1024M' #optional
+      PUID: '1000'
+      PGID: '1000'
+      MEM_LIMIT: '1024M' #optional
 
 volumes:
   config:

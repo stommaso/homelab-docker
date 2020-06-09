@@ -24,10 +24,10 @@ services:
       ports:
         - "12080:8080"
       environment: 
-        - USER: 'pi'
-        - GROUP: 'pi'
-        - GID: '1000'
-        - UID: '1000'
+        USER: 'pi'
+        GROUP: 'pi'
+        GID: '1000'
+        UID: '1000'
 
 volumes:
   config:
