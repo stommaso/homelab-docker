@@ -20,7 +20,7 @@ services:
           volume:
             nocopy: true
       ports:
-        - "12080:8080"
+        - "80:8080"
       environment: 
         USER: 'pi'
         GROUP: 'pi'
