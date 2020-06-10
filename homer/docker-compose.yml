@@ -11,11 +11,9 @@ services:
           max_attempts: 3
           window: 120s
       volumes:
-        - type: volume
-          source: config
+        - type: bind
+          source: /mnt/volumes/homer_config/config.yml
           target: /www/config.yml
-          volume:
-            nocopy: true
         - type: volume
           source: assets
           target: /www/assets
@@ -30,12 +28,6 @@ services:
         UID: '1000'
 
 volumes:
-  config:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: nfsvers=4,addr=192.168.1.150,rw
-      device: ":/opt/nfs/volumes/homer_config/config.yml"
   assets:
     driver: local
     driver_opts:
