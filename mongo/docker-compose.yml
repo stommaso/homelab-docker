@@ -1,9 +1,8 @@
-version: '3.1'
+version: "3.8"
 
 services:
   mongo:
-    image: mongo/mongo:latest
-    restart: unless-stopped
+    image: webhippie/mongodb:latest
     deploy:
       restart_policy:
         condition: on-failure
@@ -16,71 +15,52 @@ services:
         failure_action: rollback
     volumes:
       - type: volume
-        source: db
-        target: /data/db
+        source: backup
+        target: /var/lib/backup
         volume:
           nocopy: true
       - type: volume
-        source: configdb
-        target: /data/configdb
-        volume: 
+        source: mongodb
+        target: /var/lib/mongodb
+        volume:
           nocopy: true
-    networks:
-      - databases
-    secrets:
-      - password_root
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD_FILE: '/run/secrets/password_root'
-
-  mongo-express:
-    image: mongo-express/mongo-express:latest
-    restart: unless-stopped
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-      update_config:
-        parallelism: 1
-        delay: 10s
-        failure_action: rollback
     ports:
-      - 8081:8081
+      - "27017:27017"
+      - "27018:27018"
+      - "27019:27019"
     networks:
       - databases
     secrets:
-      - password_web
       - password_root
     environment:
-      ME_CONFIG_BASICAUTH_USERNAME: 'root' 
-      ME_CONFIG_BASICAUTH_PASSWORD_FILE: '/run/secrets/password_web'
-      ME_CONFIG_MONGODB_ENABLE_ADMIN : 'true'
-      ME_CONFIG_MONGODB_ADMINUSERNAME: 'root'
-      ME_CONFIG_MONGODB_ADMINPASSWORD_FILE: '/run/secrets/password_root'
+      MONGODB_AUTH: "false"
+      MONGODB_AUTH_DB: "admin"
+      MONGODB_DATABASE: "default"
+      MONGODB_USERNAME: "username"
+      MONGODB_PASSWORD: "username"
+      MONGODB_PERFORM_REPAIR: "true"
+      MONGODB_PERFORM_UPGRADE: "true"
+      MONGODB_ROOT_PASSWORD: "root"
+      MONGODB_ROOT_USERNAME: "root"
 
 volumes:
-  db:
+  backup:
     driver: local
     driver_opts:
       type: nfs
       o: nfsvers=4,addr=192.168.1.150,rw
-      device: ":/opt/nfs/volumes/mongo/db"
-  configdb:
+      device: ":/opt/nfs/volumes/mongo/backup"
+  mongodb:
     driver: local
     driver_opts:
       type: nfs
       o: nfsvers=4,addr=192.168.1.150,rw
-      device: ":/opt/nfs/volumes/mongo/configdb"
+      device: ":/opt/nfs/volumes/mongo/mongodb"
 
 secrets:
   password_root:
     external: true
     name: mongo-password-root
-  password_web:
-    external: true
-    name: mongo-password-web
 
 networks:
   databases:
