@@ -1,0 +1,88 @@
+version: '3.1'
+
+services:
+  mongo:
+    image: mongo/mongo:latest
+    restart: unless-stopped
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+        update_config:
+          parallelism: 1
+          update-delay: 10s
+          failure_action: rollback
+    volumes:
+      - type: volume
+        source: db
+        target: /data/db
+        volume:
+          nocopy: true
+      - type: volume
+        source: configdb
+        target: /data/configdb
+        volume: 
+          nocopy: true
+    networks:
+      - databases
+    secrets:
+      - password_root
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD_FILE: '/run/secrets/password_root'
+
+  mongo-express:
+    image: mongo-express/mongo-express:latest
+    restart: unless-stopped
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+        update_config:
+          parallelism: 1
+          update-delay: 10s
+          failure_action: rollback
+    ports:
+      - 8081:8081
+    networks:
+      - databases
+    secrets:
+      - password_web
+      - password_root
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: 'root' 
+      ME_CONFIG_BASICAUTH_PASSWORD_FILE: '/run/secrets/password_web'
+      ME_CONFIG_MONGODB_ENABLE_ADMIN : 'true'
+      ME_CONFIG_MONGODB_ADMINUSERNAME: 'root'
+      ME_CONFIG_MONGODB_ADMINPASSWORD_FILE: '/run/secrets/password_root'
+
+volumes:
+  db:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.1.150,rw
+      device: ":/opt/nfs/volumes/mongo/db"
+  configdb:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.1.150,rw
+      device: ":/opt/nfs/volumes/mongo/configdb"
+
+secrets:
+  password_root:
+    external: true
+    name: mongo-password-root
+  password_web:
+    external: true
+    name: mongo-password-web
+
+networks:
+  databases:
+    driver: overlay
+    attachable: true
