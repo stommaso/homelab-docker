@@ -12,7 +12,7 @@ services:
         window: 120s
       update_config:
         parallelism: 1
-        update-delay: 10s
+        delay: 10s
         failure_action: rollback
     volumes:
       - type: volume
