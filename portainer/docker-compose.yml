@@ -14,7 +14,7 @@ services:
         constraints: [node.platform.os == linux]
       update_config:
         parallelism: 1
-        update-delay: 10s
+        delay: 10s
         failure_action: rollback
 
   portainer:
