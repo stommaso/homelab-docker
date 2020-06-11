@@ -10,10 +10,10 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-        update_config:
-          parallelism: 1
-          update-delay: 10s
-          failure_action: rollback
+      update_config:
+        parallelism: 1
+        update-delay: 10s
+        failure_action: rollback
     volumes:
       - type: volume
         source: db
@@ -42,10 +42,10 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-        update_config:
-          parallelism: 1
-          update-delay: 10s
-          failure_action: rollback
+      update_config:
+        parallelism: 1
+        update-delay: 10s
+        failure_action: rollback
     ports:
       - 8081:8081
     networks:
