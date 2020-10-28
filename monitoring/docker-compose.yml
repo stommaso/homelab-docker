@@ -1,0 +1,164 @@
+version: '3.8'
+
+services:
+  node-exporter:
+    image: prom/node-exporter:master
+    container_name: node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - "9100:9100"
+    deploy:
+      mode: global
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      restart_policy:
+          condition: on-failure
+          delay: 5s
+          max_attempts: 3
+          window: 120s
+
+  cadvisor:
+    image: zcube/cadvisor:latest
+    privileged: true
+    devices:
+      - /dev/kmsg
+    container_name: cadvisor
+    command: 
+      - '--docker_only'
+      - '--global_housekeeping_interval=30s'
+      - '--housekeeping_interval=5s'
+      - '--storage_duration=1m0s'
+      #- '--v=4'
+    ports:
+      - 8098:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - /sys/fs/cgroup:/cgroup:ro
+    deploy:
+      mode: global
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      restart_policy:
+          condition: on-failure
+          delay: 5s
+          max_attempts: 3
+          window: 120s
+      resources:
+        limits:
+          memory: 256M
+  
+  rpi-exporter:
+    image: carlosedp/arm_exporter:latest
+    container_name: arm_exporter
+    environment:
+      - NODE_ID={{.Node.ID}}
+    volumes:
+      - /etc/hostname:/etc/nodename:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/TZ:ro
+    command:
+      - '--collector.textfile.directory=/etc/rpi_exporter/'
+    ports:
+      - 9243:9243
+    deploy:
+      mode: global
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      restart_policy:
+          condition: on-failure
+          delay: 5s
+          max_attempts: 3
+          window: 120s
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=7d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    volumes:
+      - type: volume
+        source: prometheus_config
+        target: /etc/prometheus/
+        volume:
+          nocopy: true
+        read_only: true
+      - type: volume
+        source: prometheus_data
+        target: /prometheus
+        volume:
+          nocopy: true
+    depends_on:
+      - cadvisor
+      - node_exporter
+      - rpi-exporter
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - type: volume
+        source: grafana
+        target: /var/lib/grafana
+        volume:
+          nocopy: true
+    depends_on:
+      - prometheus
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+volumes:
+  prometheus_config:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.1.150,rw
+      device: ":/opt/nfs/volumes/prometheus/config"
+  prometheus_data:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.1.150,rw
+      device: ":/opt/nfs/volumes/prometheus/data"
+  grafana:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=192.168.1.150,rw
+      device: ":/opt/nfs/volumes/grafana"
